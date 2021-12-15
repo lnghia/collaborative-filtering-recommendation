@@ -4,7 +4,7 @@ from flask import Flask
 from dotenv import load_dotenv
 import os
 from flask_sqlalchemy import SQLAlchemy
-from datetime import date
+from datetime import date, time
 
 from NNCF import CF
 
@@ -19,6 +19,7 @@ db = SQLAlchemy(app)
 from numpy.lib.function_base import append
 from models.Post import Post
 from models.User import User
+import time
 # from models.UserReactPost import 
 import numpy as np
 
@@ -75,11 +76,12 @@ def feedUserPostPools():
 
 @app.route("/")
 def hello():
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(func=feedUserPostPools, trigger="interval", seconds=30)
-    scheduler.start()
+    
 
     return '<h1>Hello</h1>'
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000, host='34.124.219.37')
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=feedUserPostPools, trigger="interval", seconds=30)
+scheduler.start()
+while True:
+    time.sleep(1)
