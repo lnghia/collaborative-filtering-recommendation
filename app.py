@@ -59,6 +59,9 @@ def feedUserPostPools():
     print("recommending ...")
     posts_np, posts, users = formatInput()
 
+    if posts is None or len(posts) == 0:
+        return
+
     rs = CF(posts_np, k = 10, uuCF = 0)
     rs.fit()
 
@@ -75,6 +78,7 @@ def hello():
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=feedUserPostPools, trigger="interval", seconds=30)
     scheduler.start()
+
     return '<h1>Hello</h1>'
 
 if __name__ == '__main__':
