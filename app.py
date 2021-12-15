@@ -83,5 +83,3 @@ def hello():
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=feedUserPostPools, trigger="interval", seconds=30)
 scheduler.start()
-while True:
-    time.sleep(1)
