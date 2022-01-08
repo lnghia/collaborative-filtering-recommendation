@@ -6,6 +6,8 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date, time
 
+from sqlalchemy.sql.elements import Null
+
 from NNCF import CF
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -22,6 +24,11 @@ from models.User import User
 import time
 # from models.UserReactPost import 
 import numpy as np
+
+def DidUserRateAnyItem(user):
+    user_rate_items = db.session.execute(f'select * from users_react_cookposts where is_deleted=false and user_id={user}').fetchone()
+    return user_rate_items is not None
+    
 
 def formatInput():
     posts = db.session.execute('select * from cuisine_posts').all()
@@ -68,7 +75,8 @@ def feedUserPostPools():
 
     for post in posts:
         for user in users:
-            rs.pred(user, post, normalized = 0)
+            if DidUserRateAnyItem(user):
+                rs.pred(user, post, normalized = 0)
         result = rs.recommend(post)
         print(f'{post} - {result}')
         for tmp in result:
