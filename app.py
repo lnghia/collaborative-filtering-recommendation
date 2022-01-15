@@ -12,6 +12,15 @@ from NNCF import CF
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
+import logging
+
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+  
+logger.debug("some debugging...")
+logger.error("some error...")
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -64,7 +73,7 @@ def addToPool(user_id, post_id):
         db.session.commit()
         
 def feedUserPostPools():
-    print("recommending ...")
+    logger.info("recommending ...")
     posts_np, posts, users = formatInput()
 
     if posts is None or len(posts) == 0:
@@ -78,7 +87,7 @@ def feedUserPostPools():
             if DidUserRateAnyItem(user):
                 rs.pred(user, post, normalized = 0)
         result = rs.recommend(post)
-        print(f'{post} - {result}')
+        logger.info(f'{post} - {result}')
         for tmp in result:
             addToPool(tmp, post)
 

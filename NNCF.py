@@ -19,7 +19,6 @@ class CF(object):
     def add(self, new_data):
         """
         Update Y_data matrix when new ratings come.
-        For simplicity, suppose that there is no new user or item.
         """
         self.Y_data = np.concatenate((self.Y_data, new_data), axis = 0)
 
@@ -43,11 +42,7 @@ class CF(object):
             self.Ybar_data[ids, 2] = ratings - self.mu[n]
 
         ################################################
-        # form the rating matrix as a sparse matrix. Sparsity is important 
-        # for both memory and computing efficiency. For example, if #user = 1M, 
-        # #item = 100k, then shape of the rating matrix would be (100k, 1M), 
-        # you may not have enough memory to store this. Then, instead, we store 
-        # nonzeros only, and, of course, their locations.
+        # form the rating matrix as a sparse matrix. 
         self.Ybar = sparse.coo_matrix((self.Ybar_data[:, 2],
             (self.Ybar_data[:, 1], self.Ybar_data[:, 0])), (self.n_items, self.n_users))
         self.Ybar = self.Ybar.tocsr()
